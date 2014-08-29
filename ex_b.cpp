@@ -12,26 +12,29 @@ vec alg_gen_diag(vec a, vec b, vec c, vec d,int n);
 void write_to_file(int n, vec v,double h);
 
 int main(){
+  vec a,b,c,d,v; //initializing arrays.
+  double h;
   for (int n=10;n<=1000;n*=10){ //Increasing number of grid points.
-    vec a (n-1), b(n), c(n-1), d(n), v(n+2); //initializing arrays
-    
-    a = a*0 - 1;  //Assigning matrix elements.
-    b = b*0 + 2;
-    c = c*0 - 1;
+
+    a = zeros(n-1) - 1;  //Assigning matrix elements
+    b = zeros(n) + 2;
+    c = zeros(n-1) - 1;
+    d.set_size(n);   //Sizing vectors
+    v.set_size(n+2);
 
     v(0) = 0; //boundary conditions on v
     v(n+1) = 0; 
 
-    double h = 1./(n+1); //initializing and assigning step value h
-    
-    for (double i=0;i<n;i++){d(i) = source_func(i*h);} //Assigning source function values
+    h = 1./(n+1); //initializing and assigning step value h
+
+    for (double i=0;i<n;i++){d(i) = pow(h,2)*source_func(i*h);} //Assigning source function values
     
     vec v_mid; //initializing the solved vector values in the middle
 
     v_mid = alg_gen_diag(a,b,c,d,n); //Solving the linear equation.
     for (int i=1;i<=n;i++){v(i)=v_mid(i-1);}
     
-    write_to_file(n,v,h);
+    write_to_file(n,v,h); //write result to file
     
   }
   return 0;
@@ -48,7 +51,8 @@ vec alg_gen_diag(vec a, vec b, vec c, vec d,int n){
     Function returns the solution vector v. 
   */
   double k;
-  vec v(n);
+  vec v;
+  v.set_size(n);
   for (int i = 1;i<=n-1;i++){
     k = a(i-1)/b(i-1);
     a(i-1) = 0;
@@ -66,12 +70,12 @@ void write_to_file(int n, vec v,double h){
   ostringstream ostr;
   ostr << n;
   string numberstring = ostr.str();
-  string filename = string("n") +numberstring + "diag_method.out";
+  string filename = string("n") +numberstring + "diag_method_x_v.out";
   ofstream myfile;
   myfile.open(filename.c_str());
-  myfile << "x,v \n";
+  //myfile << "x,v" << endl;
   for (int i=0;i<=n+1;i++){
-    myfile << i*h << ',' << v(i) << '\n';
+    myfile << i*h << ',' << v(i) << endl;
   }
   myfile.close();
   return;
