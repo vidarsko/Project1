@@ -8,7 +8,7 @@ using namespace arma;
 #include "functions.h"
 
 int main(){
-  mat A; //Initialize arrays and matrices.
+  mat A; //Initialize arrays and matrices git test.
   mat P,L,U;
   vec a,b,c,d,u_mid,vmid_LU,vmid,err_myalg,err_LU,err_myalg2,err_LU2;
   double x,h;
